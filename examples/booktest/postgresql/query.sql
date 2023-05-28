@@ -31,7 +31,7 @@ INSERT INTO authors
 RETURNING * ;
 
 -- name: ListAuthor :many
--- Lists 1000 Author having id > @id
+-- Lists 1000 Author having id > ?
 SELECT * FROM authors
 WHERE author_id > @author_id
 ORDER BY author_id
@@ -93,7 +93,7 @@ INSERT INTO books
 RETURNING * ;
 
 -- name: ListBook :many
--- Lists 1000 Book having id > @id
+-- Lists 1000 Book having id > ?
 SELECT * FROM books
 WHERE book_id > @book_id
 ORDER BY book_id

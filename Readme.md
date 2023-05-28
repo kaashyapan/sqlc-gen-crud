@@ -1,5 +1,9 @@
 # Sqlc plugin for generating crud SQL
+`sqlc` is a command line program that generates type-safe database access code from SQL.\
+Sqlc documentation - https://sqlc.dev
 
+This plugin reads a schema file and generates basic CRUD Sql statements for all the tables.\
+It can be run before any language specific codegen steps to bootstrap a project.
 
   ```json
   {
@@ -9,7 +13,7 @@
         "name": "gen-crud",
         "wasm": {
           "url": "https://github.com/kaashyapan/sqlc-gen-crud/releases/download/latest/sqlc-gen-crud_1.0.0.wasm",
-          "sha256": "85a42e4f3d70feb8eb725d7406593114723ab474ecd4c74d1f9edb4867515ea4"
+          "sha256": "73917dcfb520e974e3f2eb21564109431caecdb000d30b0361398c2ca6460fb5"
         }
       }
     ],
@@ -34,7 +38,7 @@
 
 ## How to use
 - Put your schema in schema.sql
-- `sqlc` doesnt let you run without an sql file. Make a dummy.sql file as below 
+- `sqlc` doesnt let you run without an sql file. So make a dummy.sql file as below 
 ```sql
 -- dummy :one
 select current_timestamp;

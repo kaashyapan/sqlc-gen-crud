@@ -53,7 +53,7 @@ RETURNING * ;
 
 {% if idIsInt %} 
 -- name: List{%s toTitle(r.Name) %} :many
--- Lists 1000 {%s toTitle(r.Name) %} having id > ?
+-- Lists 1000 {%s toTitle(r.Name) %} having id > @{%s id %}
 SELECT * FROM {%s r.Table.Name %}
 WHERE {%s id %} > @{%s id %}
 ORDER BY {%s id %}

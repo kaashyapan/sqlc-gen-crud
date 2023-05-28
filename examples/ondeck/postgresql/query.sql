@@ -34,7 +34,7 @@ INSERT INTO city
 RETURNING * ;
 
 -- name: ListCity :many
--- Lists 1000 City having id > @id
+-- Lists 1000 City having id > ?
 SELECT * FROM city
 WHERE id > @id
 ORDER BY id
@@ -104,7 +104,7 @@ INSERT INTO venue
 RETURNING * ;
 
 -- name: ListVenue :many
--- Lists 1000 Venue having id > @id
+-- Lists 1000 Venue having id > ?
 SELECT * FROM venue
 WHERE id > @id
 ORDER BY id

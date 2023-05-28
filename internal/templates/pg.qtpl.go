@@ -260,7 +260,11 @@ RETURNING * ;
 //line pg.qtpl:56
 			qw422016.E().S(toTitle(r.Name))
 //line pg.qtpl:56
-			qw422016.N().S(` having id > ?
+			qw422016.N().S(` having id > @`)
+//line pg.qtpl:56
+			qw422016.E().S(id)
+//line pg.qtpl:56
+			qw422016.N().S(`
 SELECT * FROM `)
 //line pg.qtpl:57
 			qw422016.E().S(r.Table.Name)
