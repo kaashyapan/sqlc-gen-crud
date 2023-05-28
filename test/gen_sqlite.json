@@ -1,0 +1,53 @@
+{
+  "version": "2",
+  "plugins": [
+    {
+      "name": "fsharp",
+      "wasm": {
+        "url": "https://github.com/kaashyapan/sqlc-gen-fsharp/releases/download/latest/sqlc-gen-crud_1.0.0.wasm",
+        "sha256": "85a42e4f3d70feb8eb725d7406593114723ab474ecd4c74d1f9edb4867515ea4"
+      }
+    },
+    {
+      "name": "kt",
+      "wasm": {
+        "url": "https://downloads.sqlc.dev/plugin/sqlc-gen-kotlin_1.0.0.wasm",
+        "sha256": "7620dc5d462de41fdc90e2011232c842117b416c98fd5c163d27c5738431a45c"
+      }
+    },
+    {
+      "name": "py",
+      "wasm": {
+        "url": "https://downloads.sqlc.dev/plugin/sqlc-gen-python_1.0.0.wasm",
+        "sha256": "aca83e1f59f8ffdc604774c2f6f9eb321a2b23e07dc83fc12289d25305fa065b"
+      }
+    }
+  ],
+  "sql": [
+    {
+      "engine": "sqlite",
+      "schema": "sqlite/schema.sql",
+      "queries": "sqlite/query.sql",
+      "codegen": [
+        {
+          "out": "src/sqlite",
+          "plugin": "fsharp",
+          "options": {
+            "namespace": "PAuthors"
+          }
+        }
+      ]
+    },
+    {
+      "schema": "pg/schema.sql",
+      "queries": "pg/query.sql",
+      "engine": "postgresql",
+      "gen": {
+        "go": {
+          "package": "authors",
+          "out": "sqlite"
+        }
+      }
+    }
+  ]
+}

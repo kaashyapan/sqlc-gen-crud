@@ -1,0 +1,66 @@
+{% import (
+    "github.com/kaashyapan/sqlc-gen-crud/internal/core"
+)
+%}
+
+{% func Mysql(ctx core.TmplCtx) %}
+{% for _, r := range ctx.DataClasses %}
+
+{% code
+id := getIdField(r.Name, r.Fields)
+idIsInt := keyIsInt(r.Name, r.Fields)
+%}
+
+-- name: Select{%s toTitle(r.Name) %} :one
+-- Select one {%s toTitle(r.Name) %} using {%s id %}
+SELECT
+{%- for idx, f := range r.Fields -%}
+{% if idx != 0 %} , {% else %}   {% endif %} {%s f.Name %}
+{%- endfor -%}
+FROM {%s r.Table.Name %}
+WHERE {%s id %} = ? ;
+
+-- name: Delete{%s toTitle(r.Name) %} :exec
+-- Delete one {%s toTitle(r.Name) %} using {%s id %}
+DELETE FROM {%s r.Table.Name %}
+WHERE {%s id %} = ? ;
+
+-- name: Update{%s toTitle(r.Name) %} :exec
+-- Update one row of {%s toTitle(r.Name) %} using {%s id %}
+UPDATE {%s r.Table.Name %}
+SET 
+{%- for idx, f := range skipIdField(id, r.Fields) -%}
+{% if idx != 0 %} , {% else %}   {% endif %} {%s f.Name %} = ?
+{%- endfor -%}
+WHERE {%s id %} = ? ;
+
+-- name: Insert{%s toTitle(r.Name) %} :execresult
+-- Insert one row of {%s toTitle(r.Name) %}
+INSERT INTO {%s r.Table.Name %}
+( 
+{%- for idx, f := range skipIdField(id, r.Fields) -%}
+{% if idx != 0 %} , {% else %}   {% endif %} {%s f.Name %}
+{%- endfor -%}
+) VALUES (
+{%- for idx, _ := range skipIdField(id, r.Fields) -%}
+{% if idx != 0 %} , {% else %}   {% endif %} ?
+{%- endfor -%}
+) ;
+
+{% if idIsInt %} 
+-- name: List{%s toTitle(r.Name) %} :many
+-- Lists 1000 {%s toTitle(r.Name) %} having id > ?
+SELECT * FROM {%s r.Table.Name %}
+WHERE {%s id %} > ?
+ORDER BY {%s id %}
+LIMIT 1000 ;
+{% else %}
+-- name: List{%s toTitle(r.Name) %} :many
+-- Lists all {%s toTitle(r.Name) %} 
+SELECT * FROM {%s r.Table.Name %}
+ORDER BY {%s id %}
+{% endif %}
+
+{% endfor %}
+
+{% endfunc %}

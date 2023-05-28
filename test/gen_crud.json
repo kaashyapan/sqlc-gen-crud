@@ -1,0 +1,49 @@
+{
+  "version": "2",
+  "plugins": [
+    {
+      "name": "gen-crud",
+      "process": {
+        "cmd": "/home/ubuntu/bin/sqlc-gen-crud"
+      }
+    }
+  ],
+  "sql": [
+    {
+      "engine": "postgresql",
+      "schema": "pg/schema.sql",
+      "queries": "dummy.sql",
+      "codegen": [
+        {
+          "out": "pg",
+          "plugin": "gen-crud",
+          "options": {}
+        }
+      ]
+    },
+    {
+      "engine": "mysql",
+      "schema": "mysql/schema.sql",
+      "queries": "dummy.sql",
+      "codegen": [
+        {
+          "out": "mysql",
+          "plugin": "gen-crud",
+          "options": {}
+        }
+      ]
+    },
+    {
+      "engine": "sqlite",
+      "schema": "sqlite/schema.sql",
+      "queries": "dummy.sql",
+      "codegen": [
+        {
+          "out": "sqlite",
+          "plugin": "gen-crud",
+          "options": {}
+        }
+      ]
+    }
+  ]
+}

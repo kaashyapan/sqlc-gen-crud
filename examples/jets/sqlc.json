@@ -1,0 +1,25 @@
+{
+  "version": "2",
+  "plugins": [
+    {
+      "name": "gen-crud",
+      "process": {
+        "cmd": "/home/ubuntu/bin/sqlc-gen-crud"
+      }
+    }
+  ],
+  "sql": [
+    {
+      "schema": "schema.sql",
+      "queries": "dummy.sql",
+      "engine": "postgresql",
+      "codegen": [
+        {
+          "out": "./",
+          "plugin": "gen-crud",
+          "options": {}
+        }
+      ]
+    }
+  ]
+}
