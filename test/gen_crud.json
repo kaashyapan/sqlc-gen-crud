@@ -3,9 +3,8 @@
   "plugins": [
     {
       "name": "gen-crud",
-      "wasm": {
-        "url": "https://github.com/kaashyapan/sqlc-gen-crud/releases/download/latest/sqlc-gen-crud_1.0.0.wasm",
-        "sha256": "73917dcfb520e974e3f2eb21564109431caecdb000d30b0361398c2ca6460fb5"
+      "process": {
+        "cmd": "/home/ubuntu/bin/sqlc-gen-crud"
       }
     }
   ],

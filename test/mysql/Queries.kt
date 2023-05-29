@@ -13,6 +13,9 @@ import java.time.LocalDateTime
 
 interface Queries {
   @Throws(SQLException::class)
+  fun countAuthor(): Long?
+  
+  @Throws(SQLException::class)
   fun deleteAuthor(id: Int)
   
   @Throws(SQLException::class)

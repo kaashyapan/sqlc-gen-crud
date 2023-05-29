@@ -11,6 +11,11 @@ import sqlalchemy.ext.asyncio
 from authors import models
 
 
+COUNT_AUTHOR = """-- name: count_author \\:one
+SELECT count(*) as author_count from authors
+"""
+
+
 DELETE_AUTHOR = """-- name: delete_author \\:exec
 DELETE FROM authors
 WHERE id = ?
@@ -121,6 +126,12 @@ class Querier:
     def __init__(self, conn: sqlalchemy.engine.Connection):
         self._conn = conn
 
+    def count_author(self) -> Optional[Any]:
+        row = self._conn.execute(sqlalchemy.text(COUNT_AUTHOR)).first()
+        if row is None:
+            return None
+        return row[0]
+
     def delete_author(self, *, id: Any) -> None:
         self._conn.execute(sqlalchemy.text(DELETE_AUTHOR), {"p1": id})
 
@@ -192,6 +203,12 @@ class Querier:
 class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
+
+    async def count_author(self) -> Optional[Any]:
+        row = (await self._conn.execute(sqlalchemy.text(COUNT_AUTHOR))).first()
+        if row is None:
+            return None
+        return row[0]
 
     async def delete_author(self, *, id: Any) -> None:
         await self._conn.execute(sqlalchemy.text(DELETE_AUTHOR), {"p1": id})

@@ -4,8 +4,8 @@
     {
       "name": "gen-crud",
       "wasm": {
-        "url": "https://github.com/kaashyapan/sqlc-gen-crud/releases/download/latest/sqlc-gen-crud_1.0.0.wasm",
-        "sha256": "73917dcfb520e974e3f2eb21564109431caecdb000d30b0361398c2ca6460fb5"
+        "url": "https://github.com/kaashyapan/sqlc-gen-crud/releases/download/latest/sqlc-gen-crud_1.0.1.wasm",
+        "sha256": "1a8146b30585882a8104d2ddcbfef0438b953fff08e74e7b90a9bf3d7bb2764c"
       }
     }
   ],

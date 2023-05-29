@@ -5,6 +5,7 @@
 import dataclasses
 import decimal
 from typing import AsyncIterator, Iterator, Optional
+import uuid
 
 import sqlalchemy
 import sqlalchemy.ext.asyncio
@@ -12,9 +13,25 @@ import sqlalchemy.ext.asyncio
 from authors import models
 
 
+COUNT_AUTHOR = """-- name: count_author \\:one
+SELECT count(*) as author_count from authors
+"""
+
+
+COUNT_BOOK = """-- name: count_book \\:one
+SELECT count(*) as book_count from books
+"""
+
+
 DELETE_AUTHOR = """-- name: delete_author \\:exec
 DELETE FROM authors
 WHERE author_id = :p1
+"""
+
+
+DELETE_BOOK = """-- name: delete_book \\:exec
+DELETE FROM books
+WHERE book_id = :p1
 """
 
 
@@ -49,11 +66,28 @@ class InsertAuthorParams:
     acct: Optional[decimal.Decimal]
 
 
+INSERT_BOOK = """-- name: insert_book \\:one
+INSERT INTO books
+( 
+    name
+) VALUES (
+    :p1
+)
+RETURNING book_id, name
+"""
+
+
 LIST_AUTHOR = """-- name: list_author \\:many
 SELECT author_id, ssid, name, spouses, children, bio, acct FROM authors
 WHERE author_id > :p1
 ORDER BY author_id
 LIMIT 1000
+"""
+
+
+LIST_BOOK = """-- name: list_book \\:many
+SELECT book_id, name FROM books
+ORDER BY book_id
 """
 
 
@@ -68,6 +102,15 @@ SELECT
  ,  acct
 FROM authors
 WHERE author_id = :p1
+"""
+
+
+SELECT_BOOK = """-- name: select_book \\:one
+SELECT
+    book_id
+ ,  name
+FROM books
+WHERE book_id = :p1
 """
 
 
@@ -96,12 +139,36 @@ class UpdateAuthorParams:
     author_id: int
 
 
+UPDATE_BOOK = """-- name: update_book \\:one
+UPDATE books
+SET 
+    name = :p1
+WHERE book_id = :p2
+RETURNING book_id, name
+"""
+
+
 class Querier:
     def __init__(self, conn: sqlalchemy.engine.Connection):
         self._conn = conn
 
+    def count_author(self) -> Optional[int]:
+        row = self._conn.execute(sqlalchemy.text(COUNT_AUTHOR)).first()
+        if row is None:
+            return None
+        return row[0]
+
+    def count_book(self) -> Optional[int]:
+        row = self._conn.execute(sqlalchemy.text(COUNT_BOOK)).first()
+        if row is None:
+            return None
+        return row[0]
+
     def delete_author(self, *, author_id: int) -> None:
         self._conn.execute(sqlalchemy.text(DELETE_AUTHOR), {"p1": author_id})
+
+    def delete_book(self, *, book_id: uuid.UUID) -> None:
+        self._conn.execute(sqlalchemy.text(DELETE_BOOK), {"p1": book_id})
 
     def insert_author(self, arg: InsertAuthorParams) -> Optional[models.Author]:
         row = self._conn.execute(sqlalchemy.text(INSERT_AUTHOR), {
@@ -124,6 +191,15 @@ class Querier:
             acct=row[6],
         )
 
+    def insert_book(self, *, name: str) -> Optional[models.Book]:
+        row = self._conn.execute(sqlalchemy.text(INSERT_BOOK), {"p1": name}).first()
+        if row is None:
+            return None
+        return models.Book(
+            book_id=row[0],
+            name=row[1],
+        )
+
     def list_author(self, *, author_id: int) -> Iterator[models.Author]:
         result = self._conn.execute(sqlalchemy.text(LIST_AUTHOR), {"p1": author_id})
         for row in result:
@@ -135,6 +211,14 @@ class Querier:
                 children=row[4],
                 bio=row[5],
                 acct=row[6],
+            )
+
+    def list_book(self) -> Iterator[models.Book]:
+        result = self._conn.execute(sqlalchemy.text(LIST_BOOK))
+        for row in result:
+            yield models.Book(
+                book_id=row[0],
+                name=row[1],
             )
 
     def select_author(self, *, author_id: int) -> Optional[models.Author]:
@@ -149,6 +233,15 @@ class Querier:
             children=row[4],
             bio=row[5],
             acct=row[6],
+        )
+
+    def select_book(self, *, book_id: uuid.UUID) -> Optional[models.Book]:
+        row = self._conn.execute(sqlalchemy.text(SELECT_BOOK), {"p1": book_id}).first()
+        if row is None:
+            return None
+        return models.Book(
+            book_id=row[0],
+            name=row[1],
         )
 
     def update_author(self, arg: UpdateAuthorParams) -> Optional[models.Author]:
@@ -173,13 +266,37 @@ class Querier:
             acct=row[6],
         )
 
+    def update_book(self, *, name: str, book_id: uuid.UUID) -> Optional[models.Book]:
+        row = self._conn.execute(sqlalchemy.text(UPDATE_BOOK), {"p1": name, "p2": book_id}).first()
+        if row is None:
+            return None
+        return models.Book(
+            book_id=row[0],
+            name=row[1],
+        )
+
 
 class AsyncQuerier:
     def __init__(self, conn: sqlalchemy.ext.asyncio.AsyncConnection):
         self._conn = conn
 
+    async def count_author(self) -> Optional[int]:
+        row = (await self._conn.execute(sqlalchemy.text(COUNT_AUTHOR))).first()
+        if row is None:
+            return None
+        return row[0]
+
+    async def count_book(self) -> Optional[int]:
+        row = (await self._conn.execute(sqlalchemy.text(COUNT_BOOK))).first()
+        if row is None:
+            return None
+        return row[0]
+
     async def delete_author(self, *, author_id: int) -> None:
         await self._conn.execute(sqlalchemy.text(DELETE_AUTHOR), {"p1": author_id})
+
+    async def delete_book(self, *, book_id: uuid.UUID) -> None:
+        await self._conn.execute(sqlalchemy.text(DELETE_BOOK), {"p1": book_id})
 
     async def insert_author(self, arg: InsertAuthorParams) -> Optional[models.Author]:
         row = (await self._conn.execute(sqlalchemy.text(INSERT_AUTHOR), {
@@ -202,6 +319,15 @@ class AsyncQuerier:
             acct=row[6],
         )
 
+    async def insert_book(self, *, name: str) -> Optional[models.Book]:
+        row = (await self._conn.execute(sqlalchemy.text(INSERT_BOOK), {"p1": name})).first()
+        if row is None:
+            return None
+        return models.Book(
+            book_id=row[0],
+            name=row[1],
+        )
+
     async def list_author(self, *, author_id: int) -> AsyncIterator[models.Author]:
         result = await self._conn.stream(sqlalchemy.text(LIST_AUTHOR), {"p1": author_id})
         async for row in result:
@@ -213,6 +339,14 @@ class AsyncQuerier:
                 children=row[4],
                 bio=row[5],
                 acct=row[6],
+            )
+
+    async def list_book(self) -> AsyncIterator[models.Book]:
+        result = await self._conn.stream(sqlalchemy.text(LIST_BOOK))
+        async for row in result:
+            yield models.Book(
+                book_id=row[0],
+                name=row[1],
             )
 
     async def select_author(self, *, author_id: int) -> Optional[models.Author]:
@@ -227,6 +361,15 @@ class AsyncQuerier:
             children=row[4],
             bio=row[5],
             acct=row[6],
+        )
+
+    async def select_book(self, *, book_id: uuid.UUID) -> Optional[models.Book]:
+        row = (await self._conn.execute(sqlalchemy.text(SELECT_BOOK), {"p1": book_id})).first()
+        if row is None:
+            return None
+        return models.Book(
+            book_id=row[0],
+            name=row[1],
         )
 
     async def update_author(self, arg: UpdateAuthorParams) -> Optional[models.Author]:
@@ -249,4 +392,13 @@ class AsyncQuerier:
             children=row[4],
             bio=row[5],
             acct=row[6],
+        )
+
+    async def update_book(self, *, name: str, book_id: uuid.UUID) -> Optional[models.Book]:
+        row = (await self._conn.execute(sqlalchemy.text(UPDATE_BOOK), {"p1": name, "p2": book_id})).first()
+        if row is None:
+            return None
+        return models.Book(
+            book_id=row[0],
+            name=row[1],
         )

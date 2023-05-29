@@ -12,8 +12,8 @@ It can be run before any language specific codegen steps to bootstrap a project.
       {
         "name": "gen-crud",
         "wasm": {
-          "url": "https://github.com/kaashyapan/sqlc-gen-crud/releases/download/latest/sqlc-gen-crud_1.0.0.wasm",
-          "sha256": "73917dcfb520e974e3f2eb21564109431caecdb000d30b0361398c2ca6460fb5"
+          "url": "https://github.com/kaashyapan/sqlc-gen-crud/releases/download/latest/sqlc-gen-crud_1.0.1.wasm",
+          "sha256": "1a8146b30585882a8104d2ddcbfef0438b953fff08e74e7b90a9bf3d7bb2764c"
         }
       }
     ],
@@ -46,7 +46,7 @@ select current_timestamp;
 - Make a config file `crud.json` as shown above
 Run `sqlc -f crud.json generate`
 
-- Produces 5 Sql statements select, insert, update, delete & list.
+- Produces 6 Sql statements select, insert, update, delete, list & count.
 
 See the example folder for a sample setup.
 

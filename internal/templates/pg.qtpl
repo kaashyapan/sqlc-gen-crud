@@ -5,7 +5,7 @@
 
 
 
-{% func Pg(ctx core.TmplCtx) %}
+{%- func Pg(ctx core.TmplCtx) -%}
 {% for _, r := range ctx.DataClasses %}
 
 {% code
@@ -62,9 +62,13 @@ LIMIT 1000 ;
 -- name: List{%s toTitle(r.Name) %} :many
 -- Lists all {%s toTitle(r.Name) %} 
 SELECT * FROM {%s r.Table.Name %}
-ORDER BY {%s id %}
+ORDER BY {%s id %} ;
 {% endif %}
+
+-- name: Count{%s toTitle(r.Name) %} :one
+-- Count # of {%s toTitle(r.Name) %}
+SELECT count(*) as {%s toLower(r.Name) %}_count from {%s r.Table.Name %} ;
 
 {% endfor %}
 
-{% endfunc %}
+{%- endfunc -%}

@@ -6,6 +6,8 @@ package authors
 
 import (
 	"database/sql"
+
+	"github.com/google/uuid"
 )
 
 type Author struct {
@@ -16,4 +18,9 @@ type Author struct {
 	Children sql.NullInt32
 	Bio      string
 	Acct     sql.NullString
+}
+
+type Book struct {
+	BookID uuid.UUID
+	Name   string
 }

@@ -42,6 +42,10 @@ func toTitle(str string) string {
 	return sdk.Title(str)
 }
 
+func toLower(str string) string {
+	return strings.ToLower(str)
+}
+
 func keyIsInt(prefix string, fields []core.Field) bool {
 	for _, f := range fields {
 		sample1 := strings.ToLower(prefix) + "_id"

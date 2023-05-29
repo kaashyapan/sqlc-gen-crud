@@ -24,9 +24,6 @@ var (
 
 //line pg.qtpl:8
 func StreamPg(qw422016 *qt422016.Writer, ctx core.TmplCtx) {
-//line pg.qtpl:8
-	qw422016.N().S(`
-`)
 //line pg.qtpl:9
 	for _, r := range ctx.DataClasses {
 //line pg.qtpl:9
@@ -309,45 +306,65 @@ ORDER BY `)
 //line pg.qtpl:65
 			qw422016.E().S(id)
 //line pg.qtpl:65
-			qw422016.N().S(`
+			qw422016.N().S(` ;
 `)
 //line pg.qtpl:66
 		}
 //line pg.qtpl:66
 		qw422016.N().S(`
 
+-- name: Count`)
+//line pg.qtpl:68
+		qw422016.E().S(toTitle(r.Name))
+//line pg.qtpl:68
+		qw422016.N().S(` :one
+-- Count # of `)
+//line pg.qtpl:69
+		qw422016.E().S(toTitle(r.Name))
+//line pg.qtpl:69
+		qw422016.N().S(`
+SELECT count(*) as `)
+//line pg.qtpl:70
+		qw422016.E().S(toLower(r.Name))
+//line pg.qtpl:70
+		qw422016.N().S(`_count from `)
+//line pg.qtpl:70
+		qw422016.E().S(r.Table.Name)
+//line pg.qtpl:70
+		qw422016.N().S(` ;
+
 `)
-//line pg.qtpl:68
+//line pg.qtpl:72
 	}
-//line pg.qtpl:68
+//line pg.qtpl:72
 	qw422016.N().S(`
 
 `)
-//line pg.qtpl:70
+//line pg.qtpl:74
 }
 
-//line pg.qtpl:70
+//line pg.qtpl:74
 func WritePg(qq422016 qtio422016.Writer, ctx core.TmplCtx) {
-//line pg.qtpl:70
+//line pg.qtpl:74
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line pg.qtpl:70
+//line pg.qtpl:74
 	StreamPg(qw422016, ctx)
-//line pg.qtpl:70
+//line pg.qtpl:74
 	qt422016.ReleaseWriter(qw422016)
-//line pg.qtpl:70
+//line pg.qtpl:74
 }
 
-//line pg.qtpl:70
+//line pg.qtpl:74
 func Pg(ctx core.TmplCtx) string {
-//line pg.qtpl:70
+//line pg.qtpl:74
 	qb422016 := qt422016.AcquireByteBuffer()
-//line pg.qtpl:70
+//line pg.qtpl:74
 	WritePg(qb422016, ctx)
-//line pg.qtpl:70
+//line pg.qtpl:74
 	qs422016 := string(qb422016.B)
-//line pg.qtpl:70
+//line pg.qtpl:74
 	qt422016.ReleaseByteBuffer(qb422016)
-//line pg.qtpl:70
+//line pg.qtpl:74
 	return qs422016
-//line pg.qtpl:70
+//line pg.qtpl:74
 }

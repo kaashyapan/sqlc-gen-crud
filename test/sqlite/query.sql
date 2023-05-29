@@ -67,9 +67,13 @@ INSERT INTO authors
 RETURNING * ;
 
 -- name: ListAuthor :many
--- Lists 1000 Author having id > ?
+-- Lists 1000 Author having id > @id
 SELECT * FROM authors
 WHERE id > @id
 ORDER BY id
 LIMIT 1000 ;
+
+-- name: CountAuthor :one
+-- Count # of Author
+SELECT count(*) as author_count from authors ;
 

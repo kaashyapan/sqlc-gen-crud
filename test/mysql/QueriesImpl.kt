@@ -11,6 +11,10 @@ import java.sql.Timestamp
 import java.time.Instant
 import java.time.LocalDateTime
 
+const val countAuthor = """-- name: countAuthor :one
+SELECT count(*) as author_count from authors
+"""
+
 const val deleteAuthor = """-- name: deleteAuthor :exec
 DELETE FROM authors
 WHERE id = ?
@@ -84,6 +88,24 @@ WHERE id = ?
 """
 
 class QueriesImpl(private val conn: Connection) : Queries {
+
+// Count # of Author
+
+  @Throws(SQLException::class)
+  override fun countAuthor(): Long? {
+    return conn.prepareStatement(countAuthor).use { stmt ->
+      
+      val results = stmt.executeQuery()
+      if (!results.next()) {
+        return null
+      }
+      val ret = results.getLong(1)
+      if (results.next()) {
+          throw SQLException("expected one row in result set, but got many")
+      }
+      ret
+    }
+  }
 
 // Delete one Author using id
 

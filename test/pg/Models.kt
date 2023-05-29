@@ -4,6 +4,8 @@
 
 package com.example.authors
 
+import java.util.UUID
+
 data class Author (
   val authorId: Long,
   val ssid: Int?,
@@ -12,5 +14,10 @@ data class Author (
   val children: Int?,
   val bio: String,
   val acct: java.math.BigDecimal?
+)
+
+data class Book (
+  val bookId: UUID,
+  val name: String
 )
 

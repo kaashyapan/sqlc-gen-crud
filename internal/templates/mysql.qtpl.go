@@ -24,300 +24,316 @@ var (
 
 //line mysql.qtpl:6
 func StreamMysql(qw422016 *qt422016.Writer, ctx core.TmplCtx) {
-//line mysql.qtpl:6
-	qw422016.N().S(`
-`)
 //line mysql.qtpl:7
 	for _, r := range ctx.DataClasses {
 //line mysql.qtpl:7
 		qw422016.N().S(`
-
 `)
-//line mysql.qtpl:10
+//line mysql.qtpl:9
 		id := getIdField(r.Name, r.Fields)
 		idIsInt := keyIsInt(r.Name, r.Fields)
 
-//line mysql.qtpl:12
+//line mysql.qtpl:11
 		qw422016.N().S(`
 
 -- name: Select`)
-//line mysql.qtpl:14
+//line mysql.qtpl:13
 		qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:14
+//line mysql.qtpl:13
 		qw422016.N().S(` :one
 -- Select one `)
-//line mysql.qtpl:15
+//line mysql.qtpl:14
 		qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:15
+//line mysql.qtpl:14
 		qw422016.N().S(` using `)
-//line mysql.qtpl:15
+//line mysql.qtpl:14
 		qw422016.E().S(id)
-//line mysql.qtpl:15
+//line mysql.qtpl:14
 		qw422016.N().S(`
 SELECT
 `)
-//line mysql.qtpl:17
+//line mysql.qtpl:16
 		for idx, f := range r.Fields {
-//line mysql.qtpl:18
+//line mysql.qtpl:17
 			if idx != 0 {
-//line mysql.qtpl:18
+//line mysql.qtpl:17
 				qw422016.N().S(` , `)
-//line mysql.qtpl:18
+//line mysql.qtpl:17
 			} else {
-//line mysql.qtpl:18
+//line mysql.qtpl:17
 				qw422016.N().S(`   `)
-//line mysql.qtpl:18
+//line mysql.qtpl:17
 			}
-//line mysql.qtpl:18
+//line mysql.qtpl:17
 			qw422016.N().S(` `)
-//line mysql.qtpl:18
+//line mysql.qtpl:17
 			qw422016.E().S(f.Name)
-//line mysql.qtpl:18
+//line mysql.qtpl:17
 			qw422016.N().S(`
 `)
-//line mysql.qtpl:19
+//line mysql.qtpl:18
 		}
-//line mysql.qtpl:19
+//line mysql.qtpl:18
 		qw422016.N().S(`FROM `)
-//line mysql.qtpl:20
+//line mysql.qtpl:19
 		qw422016.E().S(r.Table.Name)
-//line mysql.qtpl:20
+//line mysql.qtpl:19
 		qw422016.N().S(`
 WHERE `)
-//line mysql.qtpl:21
+//line mysql.qtpl:20
 		qw422016.E().S(id)
-//line mysql.qtpl:21
+//line mysql.qtpl:20
 		qw422016.N().S(` = ? ;
 
 -- name: Delete`)
-//line mysql.qtpl:23
+//line mysql.qtpl:22
 		qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:23
+//line mysql.qtpl:22
 		qw422016.N().S(` :exec
 -- Delete one `)
-//line mysql.qtpl:24
+//line mysql.qtpl:23
 		qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:24
+//line mysql.qtpl:23
 		qw422016.N().S(` using `)
-//line mysql.qtpl:24
+//line mysql.qtpl:23
 		qw422016.E().S(id)
-//line mysql.qtpl:24
+//line mysql.qtpl:23
 		qw422016.N().S(`
 DELETE FROM `)
-//line mysql.qtpl:25
+//line mysql.qtpl:24
 		qw422016.E().S(r.Table.Name)
-//line mysql.qtpl:25
+//line mysql.qtpl:24
 		qw422016.N().S(`
 WHERE `)
-//line mysql.qtpl:26
+//line mysql.qtpl:25
 		qw422016.E().S(id)
-//line mysql.qtpl:26
+//line mysql.qtpl:25
 		qw422016.N().S(` = ? ;
 
 -- name: Update`)
-//line mysql.qtpl:28
+//line mysql.qtpl:27
 		qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:28
+//line mysql.qtpl:27
 		qw422016.N().S(` :exec
 -- Update one row of `)
-//line mysql.qtpl:29
+//line mysql.qtpl:28
 		qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:29
+//line mysql.qtpl:28
 		qw422016.N().S(` using `)
-//line mysql.qtpl:29
+//line mysql.qtpl:28
 		qw422016.E().S(id)
-//line mysql.qtpl:29
+//line mysql.qtpl:28
 		qw422016.N().S(`
 UPDATE `)
-//line mysql.qtpl:30
+//line mysql.qtpl:29
 		qw422016.E().S(r.Table.Name)
-//line mysql.qtpl:30
+//line mysql.qtpl:29
 		qw422016.N().S(`
 SET 
 `)
-//line mysql.qtpl:32
+//line mysql.qtpl:31
 		for idx, f := range skipIdField(id, r.Fields) {
-//line mysql.qtpl:33
+//line mysql.qtpl:32
 			if idx != 0 {
-//line mysql.qtpl:33
+//line mysql.qtpl:32
 				qw422016.N().S(` , `)
-//line mysql.qtpl:33
+//line mysql.qtpl:32
 			} else {
-//line mysql.qtpl:33
+//line mysql.qtpl:32
 				qw422016.N().S(`   `)
-//line mysql.qtpl:33
+//line mysql.qtpl:32
 			}
-//line mysql.qtpl:33
+//line mysql.qtpl:32
 			qw422016.N().S(` `)
-//line mysql.qtpl:33
+//line mysql.qtpl:32
 			qw422016.E().S(f.Name)
-//line mysql.qtpl:33
+//line mysql.qtpl:32
 			qw422016.N().S(` = ?
 `)
-//line mysql.qtpl:34
+//line mysql.qtpl:33
 		}
-//line mysql.qtpl:34
+//line mysql.qtpl:33
 		qw422016.N().S(`WHERE `)
-//line mysql.qtpl:35
+//line mysql.qtpl:34
 		qw422016.E().S(id)
-//line mysql.qtpl:35
+//line mysql.qtpl:34
 		qw422016.N().S(` = ? ;
 
 -- name: Insert`)
-//line mysql.qtpl:37
+//line mysql.qtpl:36
 		qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:37
+//line mysql.qtpl:36
 		qw422016.N().S(` :execresult
 -- Insert one row of `)
-//line mysql.qtpl:38
+//line mysql.qtpl:37
 		qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:38
+//line mysql.qtpl:37
 		qw422016.N().S(`
 INSERT INTO `)
-//line mysql.qtpl:39
+//line mysql.qtpl:38
 		qw422016.E().S(r.Table.Name)
-//line mysql.qtpl:39
+//line mysql.qtpl:38
 		qw422016.N().S(`
 ( 
 `)
-//line mysql.qtpl:41
+//line mysql.qtpl:40
 		for idx, f := range skipIdField(id, r.Fields) {
-//line mysql.qtpl:42
+//line mysql.qtpl:41
 			if idx != 0 {
-//line mysql.qtpl:42
+//line mysql.qtpl:41
 				qw422016.N().S(` , `)
-//line mysql.qtpl:42
+//line mysql.qtpl:41
 			} else {
-//line mysql.qtpl:42
+//line mysql.qtpl:41
 				qw422016.N().S(`   `)
-//line mysql.qtpl:42
+//line mysql.qtpl:41
 			}
-//line mysql.qtpl:42
+//line mysql.qtpl:41
 			qw422016.N().S(` `)
-//line mysql.qtpl:42
+//line mysql.qtpl:41
 			qw422016.E().S(f.Name)
-//line mysql.qtpl:42
+//line mysql.qtpl:41
 			qw422016.N().S(`
 `)
-//line mysql.qtpl:43
+//line mysql.qtpl:42
 		}
-//line mysql.qtpl:43
+//line mysql.qtpl:42
 		qw422016.N().S(`) VALUES (
 `)
-//line mysql.qtpl:45
+//line mysql.qtpl:44
 		for idx, _ := range skipIdField(id, r.Fields) {
-//line mysql.qtpl:46
+//line mysql.qtpl:45
 			if idx != 0 {
-//line mysql.qtpl:46
+//line mysql.qtpl:45
 				qw422016.N().S(` , `)
-//line mysql.qtpl:46
+//line mysql.qtpl:45
 			} else {
-//line mysql.qtpl:46
+//line mysql.qtpl:45
 				qw422016.N().S(`   `)
-//line mysql.qtpl:46
+//line mysql.qtpl:45
 			}
-//line mysql.qtpl:46
+//line mysql.qtpl:45
 			qw422016.N().S(` ?
 `)
-//line mysql.qtpl:47
+//line mysql.qtpl:46
 		}
-//line mysql.qtpl:47
+//line mysql.qtpl:46
 		qw422016.N().S(`) ;
 
 `)
-//line mysql.qtpl:50
+//line mysql.qtpl:49
 		if idIsInt {
-//line mysql.qtpl:50
+//line mysql.qtpl:49
 			qw422016.N().S(` 
 -- name: List`)
-//line mysql.qtpl:51
+//line mysql.qtpl:50
 			qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:51
+//line mysql.qtpl:50
 			qw422016.N().S(` :many
 -- Lists 1000 `)
-//line mysql.qtpl:52
+//line mysql.qtpl:51
 			qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:52
+//line mysql.qtpl:51
 			qw422016.N().S(` having id > ?
 SELECT * FROM `)
-//line mysql.qtpl:53
+//line mysql.qtpl:52
 			qw422016.E().S(r.Table.Name)
-//line mysql.qtpl:53
+//line mysql.qtpl:52
 			qw422016.N().S(`
 WHERE `)
-//line mysql.qtpl:54
+//line mysql.qtpl:53
 			qw422016.E().S(id)
-//line mysql.qtpl:54
+//line mysql.qtpl:53
 			qw422016.N().S(` > ?
 ORDER BY `)
-//line mysql.qtpl:55
+//line mysql.qtpl:54
 			qw422016.E().S(id)
-//line mysql.qtpl:55
+//line mysql.qtpl:54
 			qw422016.N().S(`
 LIMIT 1000 ;
 `)
-//line mysql.qtpl:57
+//line mysql.qtpl:56
 		} else {
-//line mysql.qtpl:57
+//line mysql.qtpl:56
 			qw422016.N().S(`
 -- name: List`)
-//line mysql.qtpl:58
+//line mysql.qtpl:57
 			qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:58
+//line mysql.qtpl:57
 			qw422016.N().S(` :many
 -- Lists all `)
-//line mysql.qtpl:59
+//line mysql.qtpl:58
 			qw422016.E().S(toTitle(r.Name))
-//line mysql.qtpl:59
+//line mysql.qtpl:58
 			qw422016.N().S(` 
 SELECT * FROM `)
-//line mysql.qtpl:60
+//line mysql.qtpl:59
 			qw422016.E().S(r.Table.Name)
-//line mysql.qtpl:60
+//line mysql.qtpl:59
 			qw422016.N().S(`
 ORDER BY `)
-//line mysql.qtpl:61
+//line mysql.qtpl:60
 			qw422016.E().S(id)
-//line mysql.qtpl:61
-			qw422016.N().S(`
+//line mysql.qtpl:60
+			qw422016.N().S(` ;
 `)
-//line mysql.qtpl:62
+//line mysql.qtpl:61
 		}
-//line mysql.qtpl:62
+//line mysql.qtpl:61
 		qw422016.N().S(`
 
+-- name: Count`)
+//line mysql.qtpl:63
+		qw422016.E().S(toTitle(r.Name))
+//line mysql.qtpl:63
+		qw422016.N().S(` :one
+-- Count # of `)
+//line mysql.qtpl:64
+		qw422016.E().S(toTitle(r.Name))
+//line mysql.qtpl:64
+		qw422016.N().S(`
+SELECT count(*) as `)
+//line mysql.qtpl:65
+		qw422016.E().S(toLower(r.Name))
+//line mysql.qtpl:65
+		qw422016.N().S(`_count from `)
+//line mysql.qtpl:65
+		qw422016.E().S(r.Table.Name)
+//line mysql.qtpl:65
+		qw422016.N().S(` ;
+
 `)
-//line mysql.qtpl:64
+//line mysql.qtpl:67
 	}
-//line mysql.qtpl:64
+//line mysql.qtpl:67
 	qw422016.N().S(`
 
 `)
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 }
 
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 func WriteMysql(qq422016 qtio422016.Writer, ctx core.TmplCtx) {
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 	qw422016 := qt422016.AcquireWriter(qq422016)
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 	StreamMysql(qw422016, ctx)
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 	qt422016.ReleaseWriter(qw422016)
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 }
 
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 func Mysql(ctx core.TmplCtx) string {
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 	qb422016 := qt422016.AcquireByteBuffer()
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 	WriteMysql(qb422016, ctx)
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 	qs422016 := string(qb422016.B)
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 	qt422016.ReleaseByteBuffer(qb422016)
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 	return qs422016
-//line mysql.qtpl:66
+//line mysql.qtpl:69
 }

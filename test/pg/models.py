@@ -4,6 +4,7 @@
 import dataclasses
 import decimal
 from typing import Optional
+import uuid
 
 
 @dataclasses.dataclass()
@@ -15,3 +16,9 @@ class Author:
     children: Optional[int]
     bio: str
     acct: Optional[decimal.Decimal]
+
+
+@dataclasses.dataclass()
+class Book:
+    book_id: uuid.UUID
+    name: str

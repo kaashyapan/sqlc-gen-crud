@@ -7,10 +7,24 @@ package com.example.authors
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
+import java.util.UUID
+
+const val countAuthor = """-- name: countAuthor :one
+SELECT count(*) as author_count from authors
+"""
+
+const val countBook = """-- name: countBook :one
+SELECT count(*) as book_count from books
+"""
 
 const val deleteAuthor = """-- name: deleteAuthor :exec
 DELETE FROM authors
 WHERE author_id = ?
+"""
+
+const val deleteBook = """-- name: deleteBook :exec
+DELETE FROM books
+WHERE book_id = ?
 """
 
 const val insertAuthor = """-- name: insertAuthor :one
@@ -33,11 +47,26 @@ INSERT INTO authors
 RETURNING author_id, ssid, name, spouses, children, bio, acct
 """
 
+const val insertBook = """-- name: insertBook :one
+INSERT INTO books
+( 
+    name
+) VALUES (
+    ?
+)
+RETURNING book_id, name
+"""
+
 const val listAuthor = """-- name: listAuthor :many
 SELECT author_id, ssid, name, spouses, children, bio, acct FROM authors
 WHERE author_id > ?
 ORDER BY author_id
 LIMIT 1000
+"""
+
+const val listBook = """-- name: listBook :many
+SELECT book_id, name FROM books
+ORDER BY book_id
 """
 
 const val selectAuthor = """-- name: selectAuthor :one
@@ -53,6 +82,14 @@ FROM authors
 WHERE author_id = ?
 """
 
+const val selectBook = """-- name: selectBook :one
+SELECT
+    book_id
+ ,  name
+FROM books
+WHERE book_id = ?
+"""
+
 const val updateAuthor = """-- name: updateAuthor :one
 UPDATE authors
 SET 
@@ -66,7 +103,51 @@ WHERE author_id = ?
 RETURNING author_id, ssid, name, spouses, children, bio, acct
 """
 
+const val updateBook = """-- name: updateBook :one
+UPDATE books
+SET 
+    name = ?
+WHERE book_id = ?
+RETURNING book_id, name
+"""
+
 class QueriesImpl(private val conn: Connection) : Queries {
+
+// Count # of Author
+
+  @Throws(SQLException::class)
+  override fun countAuthor(): Long? {
+    return conn.prepareStatement(countAuthor).use { stmt ->
+      
+      val results = stmt.executeQuery()
+      if (!results.next()) {
+        return null
+      }
+      val ret = results.getLong(1)
+      if (results.next()) {
+          throw SQLException("expected one row in result set, but got many")
+      }
+      ret
+    }
+  }
+
+// Count # of Book
+
+  @Throws(SQLException::class)
+  override fun countBook(): Long? {
+    return conn.prepareStatement(countBook).use { stmt ->
+      
+      val results = stmt.executeQuery()
+      if (!results.next()) {
+        return null
+      }
+      val ret = results.getLong(1)
+      if (results.next()) {
+          throw SQLException("expected one row in result set, but got many")
+      }
+      ret
+    }
+  }
 
 // Delete one Author using author_id
 
@@ -74,6 +155,17 @@ class QueriesImpl(private val conn: Connection) : Queries {
   override fun deleteAuthor(authorId: Long) {
     conn.prepareStatement(deleteAuthor).use { stmt ->
       stmt.setLong(1, authorId)
+
+      stmt.execute()
+    }
+  }
+
+// Delete one Book using book_id
+
+  @Throws(SQLException::class)
+  override fun deleteBook(bookId: UUID) {
+    conn.prepareStatement(deleteBook).use { stmt ->
+      stmt.setObject(1, bookId)
 
       stmt.execute()
     }
@@ -117,7 +209,29 @@ class QueriesImpl(private val conn: Connection) : Queries {
     }
   }
 
-// Lists 1000 Author having id > @id
+// Insert one row of Book
+
+  @Throws(SQLException::class)
+  override fun insertBook(name: String): Book? {
+    return conn.prepareStatement(insertBook).use { stmt ->
+      stmt.setString(1, name)
+
+      val results = stmt.executeQuery()
+      if (!results.next()) {
+        return null
+      }
+      val ret = Book(
+                results.getObject(1) as UUID,
+                results.getString(2)
+            )
+      if (results.next()) {
+          throw SQLException("expected one row in result set, but got many")
+      }
+      ret
+    }
+  }
+
+// Lists 1000 Author having id > @author_id
 
   @Throws(SQLException::class)
   override fun listAuthor(authorId: Long): List<Author> {
@@ -135,6 +249,24 @@ class QueriesImpl(private val conn: Connection) : Queries {
                 results.getInt(5),
                 results.getString(6),
                 results.getjava.math.BigDecimal(7)
+            ))
+      }
+      ret
+    }
+  }
+
+// Lists all Book 
+
+  @Throws(SQLException::class)
+  override fun listBook(): List<Book> {
+    return conn.prepareStatement(listBook).use { stmt ->
+      
+      val results = stmt.executeQuery()
+      val ret = mutableListOf<Book>()
+      while (results.next()) {
+          ret.add(Book(
+                results.getObject(1) as UUID,
+                results.getString(2)
             ))
       }
       ret
@@ -160,6 +292,28 @@ class QueriesImpl(private val conn: Connection) : Queries {
                 results.getInt(5),
                 results.getString(6),
                 results.getjava.math.BigDecimal(7)
+            )
+      if (results.next()) {
+          throw SQLException("expected one row in result set, but got many")
+      }
+      ret
+    }
+  }
+
+// Select one Book using book_id
+
+  @Throws(SQLException::class)
+  override fun selectBook(bookId: UUID): Book? {
+    return conn.prepareStatement(selectBook).use { stmt ->
+      stmt.setObject(1, bookId)
+
+      val results = stmt.executeQuery()
+      if (!results.next()) {
+        return null
+      }
+      val ret = Book(
+                results.getObject(1) as UUID,
+                results.getString(2)
             )
       if (results.next()) {
           throw SQLException("expected one row in result set, but got many")
@@ -200,6 +354,29 @@ class QueriesImpl(private val conn: Connection) : Queries {
                 results.getInt(5),
                 results.getString(6),
                 results.getjava.math.BigDecimal(7)
+            )
+      if (results.next()) {
+          throw SQLException("expected one row in result set, but got many")
+      }
+      ret
+    }
+  }
+
+// Update one row of Book using book_id
+
+  @Throws(SQLException::class)
+  override fun updateBook(name: String, bookId: UUID): Book? {
+    return conn.prepareStatement(updateBook).use { stmt ->
+      stmt.setString(1, name)
+          stmt.setObject(2, bookId)
+
+      val results = stmt.executeQuery()
+      if (!results.next()) {
+        return null
+      }
+      val ret = Book(
+                results.getObject(1) as UUID,
+                results.getString(2)
             )
       if (results.next()) {
           throw SQLException("expected one row in result set, but got many")

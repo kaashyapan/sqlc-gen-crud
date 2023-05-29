@@ -7,10 +7,20 @@ package com.example.authors
 import java.sql.Connection
 import java.sql.SQLException
 import java.sql.Statement
+import java.util.UUID
 
 interface Queries {
   @Throws(SQLException::class)
+  fun countAuthor(): Long?
+  
+  @Throws(SQLException::class)
+  fun countBook(): Long?
+  
+  @Throws(SQLException::class)
   fun deleteAuthor(authorId: Long)
+  
+  @Throws(SQLException::class)
+  fun deleteBook(bookId: UUID)
   
   @Throws(SQLException::class)
   fun insertAuthor(
@@ -22,10 +32,19 @@ interface Queries {
       acct: java.math.BigDecimal?): Author?
   
   @Throws(SQLException::class)
+  fun insertBook(name: String): Book?
+  
+  @Throws(SQLException::class)
   fun listAuthor(authorId: Long): List<Author>
   
   @Throws(SQLException::class)
+  fun listBook(): List<Book>
+  
+  @Throws(SQLException::class)
   fun selectAuthor(authorId: Long): Author?
+  
+  @Throws(SQLException::class)
+  fun selectBook(bookId: UUID): Book?
   
   @Throws(SQLException::class)
   fun updateAuthor(
@@ -36,6 +55,9 @@ interface Queries {
       bio: String,
       acct: java.math.BigDecimal?,
       authorId: Long): Author?
+  
+  @Throws(SQLException::class)
+  fun updateBook(name: String, bookId: UUID): Book?
   
 }
 
