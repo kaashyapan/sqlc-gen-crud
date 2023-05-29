@@ -12,7 +12,7 @@ It can be run before any language specific codegen steps to bootstrap a project.
       {
         "name": "gen-crud",
         "wasm": {
-          "url": "https://github.com/kaashyapan/sqlc-gen-crud/releases/download/latest/sqlc-gen-crud_1.0.1.wasm",
+          "url": "https://github.com/kaashyapan/sqlc-gen-crud/releases/download/v1.0.1/sqlc-gen-crud_1.0.1.wasm",
           "sha256": "1a8146b30585882a8104d2ddcbfef0438b953fff08e74e7b90a9bf3d7bb2764c"
         }
       }
