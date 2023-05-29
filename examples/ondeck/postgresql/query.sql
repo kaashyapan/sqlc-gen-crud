@@ -34,11 +34,15 @@ INSERT INTO city
 RETURNING * ;
 
 -- name: ListCity :many
--- Lists 1000 City having id > ?
+-- Lists 1000 City having id > @id
 SELECT * FROM city
 WHERE id > @id
 ORDER BY id
 LIMIT 1000 ;
+
+-- name: CountCity :one
+-- Count # of City
+SELECT count(*) as city_count from city ;
 
 -- name: SelectVenue :one
 -- Select one Venue using id
@@ -104,9 +108,13 @@ INSERT INTO venue
 RETURNING * ;
 
 -- name: ListVenue :many
--- Lists 1000 Venue having id > ?
+-- Lists 1000 Venue having id > @id
 SELECT * FROM venue
 WHERE id > @id
 ORDER BY id
 LIMIT 1000 ;
+
+-- name: CountVenue :one
+-- Count # of Venue
+SELECT count(*) as venue_count from venue ;
 

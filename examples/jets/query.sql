@@ -37,6 +37,10 @@ WHERE id > @id
 ORDER BY id
 LIMIT 1000 ;
 
+-- name: CountPilot :one
+-- Count # of Pilot
+SELECT count(*) as pilot_count from pilots ;
+
 -- name: SelectJet :one
 -- Select one Jet using id
 SELECT
@@ -87,6 +91,10 @@ WHERE id > @id
 ORDER BY id
 LIMIT 1000 ;
 
+-- name: CountJet :one
+-- Count # of Jet
+SELECT count(*) as jet_count from jets ;
+
 -- name: SelectLanguage :one
 -- Select one Language using id
 SELECT
@@ -124,6 +132,10 @@ SELECT * FROM languages
 WHERE id > @id
 ORDER BY id
 LIMIT 1000 ;
+
+-- name: CountLanguage :one
+-- Count # of Language
+SELECT count(*) as language_count from languages ;
 
 -- name: SelectPilotLanguage :one
 -- Select one PilotLanguage using id
@@ -165,4 +177,8 @@ SELECT * FROM pilot_languages
 WHERE id > @id
 ORDER BY id
 LIMIT 1000 ;
+
+-- name: CountPilotLanguage :one
+-- Count # of PilotLanguage
+SELECT count(*) as pilotlanguage_count from pilot_languages ;
 

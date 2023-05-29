@@ -39,3 +39,7 @@ WHERE id > ?
 ORDER BY id
 LIMIT 1000 ;
 
+-- name: CountAuthor :one
+-- Count # of Author
+SELECT count(*) as author_count from authors ;
+

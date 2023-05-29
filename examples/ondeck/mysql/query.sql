@@ -38,6 +38,10 @@ WHERE id > ?
 ORDER BY id
 LIMIT 1000 ;
 
+-- name: CountCity :one
+-- Count # of City
+SELECT count(*) as city_count from city ;
+
 -- name: SelectVenue :one
 -- Select one Venue using id
 SELECT
@@ -105,4 +109,8 @@ SELECT * FROM venue
 WHERE id > ?
 ORDER BY id
 LIMIT 1000 ;
+
+-- name: CountVenue :one
+-- Count # of Venue
+SELECT count(*) as venue_count from venue ;
 
